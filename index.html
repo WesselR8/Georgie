@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgië Reiskaart</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="nav-logo">
+            <span class="flag">🇬🇪</span>
+            <span class="logo-text">Georgië</span>
+            <span class="logo-sub">Reiskaart</span>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="map">
+                <span class="tab-icon">🗺</span>
+                <span class="tab-label">Kaart</span>
+            </button>
+            <button class="tab-btn" data-tab="transport">
+                <span class="tab-icon">🚆</span>
+                <span class="tab-label">Vervoer</span>
+            </button>
+            <button class="tab-btn" data-tab="prices">
+                <span class="tab-icon">💰</span>
+                <span class="tab-label">Prijzen</span>
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <div class="filter-group" id="mapFilters">
+                <button class="filter-btn active" data-filter="all">Alle</button>
+                <button class="filter-btn" data-filter="stad">🏙 Steden</button>
+                <button class="filter-btn" data-filter="berg">⛰ Bergdorpen</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAP VIEW -->
+    <div id="map-view" class="view active">
+        <div id="map"></div>
+
+        <!-- Legend -->
+        <div class="map-legend">
+            <div class="legend-item">
+                <span class="legend-dot stad"></span> Steden
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot berg"></span> Bergdorpen
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <button class="sidebar-close" id="closeSidebar" aria-label="Sluiten">✕</button>
+            <div id="sidebarContent"></div>
+        </aside>
+    </div>
+
+    <!-- TRANSPORT VIEW -->
+    <div id="transport-view" class="view">
+        <div class="scroll-view">
+            <div class="page-header">
+                <h1>Vervoer in Georgië</h1>
+                <p>Trein, marshrutka en taxi routes — met actuele prijzen en reisinformatie</p>
+            </div>
+
+            <div class="transport-grid">
+
+                <!-- TREIN -->
+                <div class="transport-card">
+                    <div class="transport-card-head train-head">
+                        <div class="tc-head-left">
+                            <span class="tc-icon">🚆</span>
+                            <div>
+                                <h2>Trein</h2>
+                                <span class="tc-sub">Georgian Railway</span>
+                            </div>
+                        </div>
+                        <span class="tc-badge train-badge">Comfortabel</span>
+                    </div>
+                    <div class="route-table">
+                        <div class="route-head">
+                            <span>Route</span>
+                            <span>Duur</span>
+                            <span>GEL</span>
+                            <span>EUR</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Tbilisi → Batumi</span>
+                            <span class="dur">~5 uur</span>
+                            <span class="gel-p">15–25</span>
+                            <span class="eur-p">€5–8</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Tbilisi → Kutaisi</span>
+                            <span class="dur">~2.5 uur</span>
+                            <span class="gel-p">8–15</span>
+                            <span class="eur-p">€3–5</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Batumi → Kutaisi</span>
+                            <span class="dur">~2 uur</span>
+                            <span class="gel-p">8–12</span>
+                            <span class="eur-p">€3–4</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Tbilisi → Batumi (nacht)</span>
+                            <span class="dur">~6 uur</span>
+                            <span class="gel-p">20–40</span>
+                            <span class="eur-p">€7–13</span>
+                        </div>
+                    </div>
+                    <div class="transport-tip">
+                        <span class="tip-icon">💡</span>
+                        <p>Reserveer via <strong>mradi.ge</strong> of de Georgian Railway app. Nachttrein Tbilisi ↔ Batumi heeft ligwagens.</p>
+                    </div>
+                </div>
+
+                <!-- MARSHRUTKA -->
+                <div class="transport-card">
+                    <div class="transport-card-head bus-head">
+                        <div class="tc-head-left">
+                            <span class="tc-icon">🚌</span>
+                            <div>
+                                <h2>Marshrutka</h2>
+                                <span class="tc-sub">Lokale minibus</span>
+                            </div>
+                        </div>
+                        <span class="tc-badge bus-badge">Budget</span>
+                    </div>
+                    <div class="route-table">
+                        <div class="route-head">
+                            <span>Route</span>
+                            <span>Duur</span>
+                            <span>GEL</span>
+                            <span>EUR</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Tbilisi → Stepantsminda</span>
+                            <span class="dur">~2.5–3 u</span>
+                            <span class="gel-p">15–20</span>
+                            <span class="eur-p">€5–7</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Tbilisi → Mestia</span>
+                            <span class="dur">~9–10 u</span>
+                            <span class="gel-p">40–55</span>
+                            <span class="eur-p">€13–18</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Kutaisi → Mestia</span>
+                            <span class="dur">~4–5 u</span>
+                            <span class="gel-p">25–35</span>
+                            <span class="eur-p">€8–12</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Mestia → Mazeri</span>
+                            <span class="dur">~45 min</span>
+                            <span class="gel-p">10–15</span>
+                            <span class="eur-p">€3–5</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Mestia → Lentekhi</span>
+                            <span class="dur">~3–4 u</span>
+                            <span class="gel-p">20–30</span>
+                            <span class="eur-p">€7–10</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Stepantsminda → Juta</span>
+                            <span class="dur">~1 uur</span>
+                            <span class="gel-p">10–20</span>
+                            <span class="eur-p">€3–7</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Kutaisi → Lentekhi</span>
+                            <span class="dur">~3 uur</span>
+                            <span class="gel-p">15–25</span>
+                            <span class="eur-p">€5–8</span>
+                        </div>
+                    </div>
+                    <div class="transport-tip">
+                        <span class="tip-icon">💡</span>
+                        <p>Marshrutka's vertrekken vroeg in de ochtend (7–10u). Kom op tijd — geen reservering mogelijk. Vertrek van Didube station (Tbilisi) of Autostasie Kutaisi.</p>
+                    </div>
+                </div>
+
+                <!-- TAXI & VLUCHTEN -->
+                <div class="transport-card">
+                    <div class="transport-card-head taxi-head">
+                        <div class="tc-head-left">
+                            <span class="tc-icon">🚕</span>
+                            <div>
+                                <h2>Taxi & Vlucht</h2>
+                                <span class="tc-sub">Bolt · Yandex · Air Georgia</span>
+                            </div>
+                        </div>
+                        <span class="tc-badge taxi-badge">Flexibel</span>
+                    </div>
+                    <div class="route-table">
+                        <div class="route-head">
+                            <span>Route / Type</span>
+                            <span>Optie</span>
+                            <span>GEL</span>
+                            <span>EUR</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Tbilisi stad (5 km)</span>
+                            <span class="dur">Bolt / Yandex</span>
+                            <span class="gel-p">5–10</span>
+                            <span class="eur-p">€2–3</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-stad"></span>Luchthaven → centrum</span>
+                            <span class="dur">Taxi</span>
+                            <span class="gel-p">20–35</span>
+                            <span class="eur-p">€7–12</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Tbilisi → Stepantsminda</span>
+                            <span class="dur">Shared taxi</span>
+                            <span class="gel-p">25–40</span>
+                            <span class="eur-p">€8–13</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Tbilisi → Mestia ✈</span>
+                            <span class="dur">Vlucht ~45min</span>
+                            <span class="gel-p">~100</span>
+                            <span class="eur-p">€35–70</span>
+                        </div>
+                        <div class="route-row">
+                            <span class="rn"><span class="dot-berg"></span>Privé jeep (dag)</span>
+                            <span class="dur">Bergritten</span>
+                            <span class="gel-p">100–200</span>
+                            <span class="eur-p">€33–67</span>
+                        </div>
+                    </div>
+                    <div class="transport-tip">
+                        <span class="tip-icon">💡</span>
+                        <p>Gebruik <strong>Bolt</strong> of <strong>Yandex Go</strong> in steden. In bergdorpen (Mestia, Stepantsminda) regelt je guesthouse lokale taxis of jeeps.</p>
+                    </div>
+                </div>
+
+            </div><!-- end transport-grid -->
+
+            <!-- Wisselkoers balk -->
+            <div class="info-bar">
+                <span class="info-bar-icon">ℹ️</span>
+                <div class="info-bar-text">
+                    <strong>Wisselkoers (2025):</strong> 1 EUR ≈ 3 GEL &nbsp;·&nbsp; 1 USD ≈ 2.7 GEL &nbsp;·&nbsp;
+                    Prijzen zijn richtprijzen — raadpleeg <strong>mradi.ge</strong> voor actuele treintarieven.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PRICES VIEW -->
+    <div id="prices-view" class="view">
+        <div class="scroll-view">
+            <div class="page-header">
+                <h1>Prijzen in Georgië</h1>
+                <p>Gemiddelde kosten per categorie — alles wat je nodig hebt voor je reisbudget</p>
+            </div>
+
+            <div class="prices-grid">
+
+                <!-- Eten -->
+                <div class="price-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">🍽️</span>
+                        <h3>Eten</h3>
+                    </div>
+                    <div class="price-rows">
+                        <div class="price-row">
+                            <span class="pr-name">Khinkali (stuk, straat)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">0.50–0.80 GEL</span>
+                                <span class="pr-eur">~€0.15–0.25</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Khachapuri (kaasbrood)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">5–12 GEL</span>
+                                <span class="pr-eur">~€2–4</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Maaltijd lokaal restaurant</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">15–30 GEL</span>
+                                <span class="pr-eur">~€5–10</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Toeristisch restaurant</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">30–60 GEL</span>
+                                <span class="pr-eur">~€10–20</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Bakkerij / fastfood</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">3–8 GEL</span>
+                                <span class="pr-eur">~€1–3</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Supermarkt boodschappen (dag)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">10–20 GEL</span>
+                                <span class="pr-eur">~€3–7</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>Budget / dag:</span>
+                        <strong>20–50 GEL (€7–17)</strong>
+                    </div>
+                </div>
+
+                <!-- Drinken -->
+                <div class="price-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">🍷</span>
+                        <h3>Drinken</h3>
+                    </div>
+                    <div class="price-rows">
+                        <div class="price-row">
+                            <span class="pr-name">Lokaal bier (0.5L, bar)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">3–5 GEL</span>
+                                <span class="pr-eur">~€1–2</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Wijn (glas, restaurant)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">5–15 GEL</span>
+                                <span class="pr-eur">~€2–5</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Fles wijn (supermarkt)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">10–25 GEL</span>
+                                <span class="pr-eur">~€3–8</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Espresso / koffie</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">3–5 GEL</span>
+                                <span class="pr-eur">~€1–2</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Frisdrank / sap (flesje)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">2–4 GEL</span>
+                                <span class="pr-eur">~€0.70–1.30</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Water (1.5L fles)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">1–2 GEL</span>
+                                <span class="pr-eur">~€0.30–0.70</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>Budget / dag:</span>
+                        <strong>10–30 GEL (€3–10)</strong>
+                    </div>
+                </div>
+
+                <!-- Verblijf -->
+                <div class="price-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">🏨</span>
+                        <h3>Verblijf (per nacht)</h3>
+                    </div>
+                    <div class="price-rows">
+                        <div class="price-row">
+                            <span class="pr-name">Hostel dorm (bed)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">15–30 GEL</span>
+                                <span class="pr-eur">~€5–10</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Guesthouse privékamer</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">50–80 GEL</span>
+                                <span class="pr-eur">~€17–27</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Budget hotel</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">80–120 GEL</span>
+                                <span class="pr-eur">~€27–40</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Middenklasse hotel</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">150–300 GEL</span>
+                                <span class="pr-eur">~€50–100</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Bergdorp guesthouse ★</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">40–70 GEL</span>
+                                <span class="pr-eur">~€13–23</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>★ Vaak inclusief ontbijt + avondeten</span>
+                    </div>
+                </div>
+
+                <!-- Lokaal Vervoer -->
+                <div class="price-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">🚕</span>
+                        <h3>Lokaal Vervoer</h3>
+                    </div>
+                    <div class="price-rows">
+                        <div class="price-row">
+                            <span class="pr-name">Metro Tbilisi (rit)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">1 GEL</span>
+                                <span class="pr-eur">~€0.33</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Stadsbus</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">1 GEL</span>
+                                <span class="pr-eur">~€0.33</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Bolt taxi (5 km)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">5–10 GEL</span>
+                                <span class="pr-eur">~€2–3</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Luchthaven taxi</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">20–35 GEL</span>
+                                <span class="pr-eur">~€7–12</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Dagtrip (minibus tour)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">40–80 GEL</span>
+                                <span class="pr-eur">~€13–27</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>Budget / dag:</span>
+                        <strong>5–20 GEL (€2–7)</strong>
+                    </div>
+                </div>
+
+                <!-- Activiteiten -->
+                <div class="price-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">🎭</span>
+                        <h3>Activiteiten</h3>
+                    </div>
+                    <div class="price-rows">
+                        <div class="price-row">
+                            <span class="pr-name">Zwavelbaden Tbilisi</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">20–80 GEL</span>
+                                <span class="pr-eur">~€7–27</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Wijnproeverij / tour</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">50–150 GEL</span>
+                                <span class="pr-eur">~€17–50</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Wandelgids / lokale tour</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">30–80 GEL</span>
+                                <span class="pr-eur">~€10–27</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Museum entree</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">5–15 GEL</span>
+                                <span class="pr-eur">~€2–5</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Paardrijden / jeep tour</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">80–200 GEL</span>
+                                <span class="pr-eur">~€27–67</span>
+                            </div>
+                        </div>
+                        <div class="price-row">
+                            <span class="pr-name">Ski dagpas (Mestia/Gudauri)</span>
+                            <div class="pr-prices">
+                                <span class="pr-gel">60–100 GEL</span>
+                                <span class="pr-eur">~€20–33</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>Budget / dag:</span>
+                        <strong>0–100 GEL (€0–33)</strong>
+                    </div>
+                </div>
+
+                <!-- Dagbudget overzicht -->
+                <div class="price-card budget-card">
+                    <div class="price-card-head">
+                        <span class="pc-icon">📊</span>
+                        <h3>Dagbudget Overzicht</h3>
+                    </div>
+                    <div class="budget-tiers">
+                        <div class="budget-tier tier-backpacker">
+                            <div class="bt-header">
+                                <span class="bt-icon">🎒</span>
+                                <span class="bt-label">Backpacker</span>
+                            </div>
+                            <div class="bt-amount">€25–40 / dag</div>
+                            <div class="bt-desc">Hostel dorm · lokaal eten · marshrutka · zelf koken</div>
+                        </div>
+                        <div class="budget-tier tier-mid">
+                            <div class="bt-header">
+                                <span class="bt-icon">✈️</span>
+                                <span class="bt-label">Comfort</span>
+                            </div>
+                            <div class="bt-amount">€50–80 / dag</div>
+                            <div class="bt-desc">Guesthouse · restaurants · Bolt taxi · dagtrips</div>
+                        </div>
+                        <div class="budget-tier tier-luxury">
+                            <div class="bt-header">
+                                <span class="bt-icon">🏆</span>
+                                <span class="bt-label">Luxe</span>
+                            </div>
+                            <div class="bt-amount">€100–150+ / dag</div>
+                            <div class="bt-desc">Hotel · fine dining · privé tours · vluchten intern</div>
+                        </div>
+                    </div>
+                    <div class="price-card-footer">
+                        <span>Georgië is één van de goedkoopste reisbestemmingen van Europa 🌍</span>
+                    </div>
+                </div>
+
+            </div><!-- end prices-grid -->
+
+            <div class="info-bar">
+                <span class="info-bar-icon">ℹ️</span>
+                <div class="info-bar-text">
+                    <strong>Wisselkoers (2025):</strong> 1 EUR ≈ 3 GEL &nbsp;·&nbsp; 1 USD ≈ 2.7 GEL &nbsp;·&nbsp;
+                    Prijzen zijn richtprijzen en kunnen variëren per seizoen en regio.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
